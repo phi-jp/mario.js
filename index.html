@@ -11,10 +11,19 @@
 <script src="mario.js"></script>
 <script>
 window.onload = function() {
+
     Mario({
         x: window.innerWidth-100,
         scale: 4,
         direction: "left",
+    });
+
+    Mario.Block({
+        x: window.innerWidth-100,
+        y: window.innerHeight-150,
+        width: 52,
+        height: 52,
+        src: "http://lh6.googleusercontent.com/jlfzYR2OlLk8cU-kFJwjmHv55vN_kfbGm2AxSgFuy2s9Z-47uce-Uw4HejZmpeplB4UpJOEb2g=s128-h128-e365",
     });
 };
 </script>

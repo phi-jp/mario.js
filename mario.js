@@ -55,8 +55,8 @@
     {
         var mario = new _Mario(param);
         return mario;
-
     };
+    np.Mario.blocks = [];
     np.Mario.defaults = {
         x: 50,
         y: -50,
@@ -81,7 +81,7 @@
 
             this._setupMario(param);
             this.floorHeight = param.floorHeight;
-            this.jump = 0;
+            this.jumpValue = 0;
             this.setDirection(param.direction);
 
             // update
@@ -92,10 +92,10 @@
             var scale = param.scale;
             var eMario = document.createElement("canvas");
             this.eMario = eMario;
+            document.body.appendChild(eMario);
 
             eMario.width = MARIO_BITMAP_WIDTH  * scale;
             eMario.height= MARIO_BITMAP_HEIGHT * scale;
-            document.body.appendChild(eMario);
             eMario.style.position = "fixed";
             eMario.style.margin = "0";
             eMario.style.padding = "0";
@@ -103,6 +103,11 @@
 
             this.setX(param.x);
             this.setY(param.y || -50);
+
+            eMario.addEventListener('click', function() {
+                console.log("hoge");
+                this.jump();
+            }.bind(this));
 
             var setBitmap = function(){
                 var tempCanvas = document.createElement("canvas");
@@ -145,6 +150,12 @@
         setY: function(v) {
             this.eMario.style.top = v + 'px';
         },
+        getWidth: function() {
+            return Number(this.eMario.width);
+        },
+        getHeight: function() {
+            return Number(this.eMario.height);
+        },
 
         setDirection: function(direction) {
             var style = this.eMario.style;
@@ -182,22 +193,104 @@
             if (x < 0) { x=window.innerWidth; }
             if (x > window.innerWidth) { x=0; }
 
+
             // jump
-            if (y == floor && isKey(KEY_UP)) this.jump = -16;
-            this.jump += 0.5;
-            y += this.jump;
+            if (y == floor && isKey(KEY_UP)) this.jump();
+            this.jumpValue += 0.5;
+            y += this.jumpValue;
             // check bottom
             if (y >= floor) {
                 y = floor;
-                this.jump = 0;
+                this.jumpValue = 0;
+            }
+
+            // 衝突判定
+            var hit = this._checkBlocks();
+            if (hit == true) {
+                y = window.innerHeight-150-this.getHeight();
             }
 
             // set position
+
             this.setX(x);
             this.setY(y);
         },
 
+        _checkBlocks: function() {
+            var self = this;
+            var marioX = this.getX();
+            var marioY = this.getY();
+            var marioW = this.getWidth();
+            var marioH = this.getHeight();
+            var marioBottom = marioY + marioH;
+            var blocks = np.Mario.blocks;
+
+            return blocks.some(function(block) {
+                var blockX = block.getX();
+                var blockY = block.getY();
+
+                if (marioBottom > blockY) {
+                    self.setY(blockY-marioH);
+                    console.log(blockY-marioH);
+                    self.jumpValue = 0;
+                    return true;
+                }
+            });
+        },
+
+        jump: function() {
+            this.jumpValue = -16;
+        },
+
     };
 
+    var Block = function(param) {
+        this.init(param);
+    };
+
+    Block.prototype = {
+        init: function(param) {
+            this.element = document.createElement("img");
+
+            var element = this.element;
+            document.body.appendChild(element);
+
+            element.src = param.src;
+
+            element.width = param.width;
+            element.height= param.height;
+            element.style.position = "fixed";
+            element.style.margin = "0";
+            element.style.padding = "0";
+            element.style.zIndex = "0";
+
+            this.setX(param.x);
+            this.setY(param.y);
+
+            np.Mario.blocks.push(this);
+        },
+        getX: function() {
+            return  Number( this.element.style.left.replace("px", '') );
+        },
+        setX: function(v) {
+            this.element.style.left = v + 'px';
+        },
+        getY: function() {
+            return  Number( this.element.style.top.replace("px", '') );
+        },
+        setY: function(v) {
+            this.element.style.top = v + 'px';
+        },
+        getWidth: function() {
+            return Number(this.element.width);
+        },
+        getHeight: function() {
+            return Number(this.element.height);
+        },
+    };
+
+    np.Mario.Block = function(param) {
+        return new Block(param);
+    };
     
 })(window);
