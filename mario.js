@@ -204,16 +204,15 @@
                 this.jumpValue = 0;
             }
 
+            // set position
+            this.setX(x);
+            this.setY(y);
+
             // 衝突判定
             var hit = this._checkBlocks();
             if (hit == true) {
                 y = window.innerHeight-150-this.getHeight();
             }
-
-            // set position
-
-            this.setX(x);
-            this.setY(y);
         },
 
         _checkBlocks: function() {
