@@ -150,6 +150,13 @@
         setY: function(v) {
             this.eMario.style.top = v + 'px';
         },
+
+        getRight: function() {
+            return this.getX() + this.getWidth();
+        },
+        getBottom: function() {
+            return this.getY() + this.getHeight();
+        },
         getWidth: function() {
             return Number(this.eMario.width);
         },
@@ -179,7 +186,7 @@
             var floor = this.getFloor();
             
             // check B dash
-            var speed = (isKey(KEY_B)) ? 2:1;
+            var speed = (isKey(KEY_B)) ? 4:2;
             // move
             if (isKey(KEY_LEFT)) {
                 x-=5*speed;
@@ -193,26 +200,55 @@
             if (x < 0) { x=window.innerWidth; }
             if (x > window.innerWidth) { x=0; }
 
-
             // jump
-            if (y == floor && isKey(KEY_UP)) this.jump();
             this.jumpValue += 0.5;
             y += this.jumpValue;
+
             // check bottom
             if (y >= floor) {
                 y = floor;
                 this.jumpValue = 0;
             }
 
+
             // set position
             this.setX(x);
             this.setY(y);
 
             // 衝突判定
-            var hit = this._checkBlocks();
-            if (hit == true) {
-                y = window.innerHeight-150-this.getHeight();
+            var block = this._checkBlocks();
+            if (block) {
+                if (this.getBottom() >= block.getY()) {
+                    this.setY(block.getY()-this.getHeight());
+                }
+                else if (this.getRight() >= block.getX()) {
+                    this.setX(block.getX()-this.getWidth());
+                }
+                else if (this.getX() < block.getRight()) {
+                    this.setX(block.getRight());
+                }
+                else {
+                    // this.setY(block.getY()-this.getHeight());
+                    // this.jumpValue = 0;
+                }
+                this.jumpValue = 0;
+                // else {
+                //     y = block.getY() - this.getHeight();
+                //     this.jumpValue = 0;
+                // }
             }
+
+
+            // ジャンプ判定
+            if (this.jumpValue <= 0) {
+                if (isKey(KEY_UP)) {
+                    this.jump();
+                }
+            }
+        },
+
+        _updateJump: function() {
+
         },
 
         _checkBlocks: function() {
@@ -221,20 +257,26 @@
             var marioY = this.getY();
             var marioW = this.getWidth();
             var marioH = this.getHeight();
+            var marioRight = marioX + marioW;
             var marioBottom = marioY + marioH;
             var blocks = np.Mario.blocks;
+            var target = null;
 
-            return blocks.some(function(block) {
+            blocks.some(function(block) {
                 var blockX = block.getX();
                 var blockY = block.getY();
+                var blockW = block.getWidth();
+                var blockH = block.getHeight();
 
-                if (marioBottom > blockY) {
-                    self.setY(blockY-marioH);
-                    console.log(blockY-marioH);
-                    self.jumpValue = 0;
-                    return true;
+                if (blockX <= marioRight && marioX <= (blockX+blockW)) {
+                    if (marioBottom > blockY && marioY < (blockY+blockH)) {
+                        target = block;
+                        return true;
+                    }
                 }
             });
+
+            return target;
         },
 
         jump: function() {
@@ -279,6 +321,12 @@
         },
         setY: function(v) {
             this.element.style.top = v + 'px';
+        },
+        getRight: function() {
+            return this.getX() + this.getWidth();
+        },
+        getBottom: function() {
+            return this.getY() + this.getHeight();
         },
         getWidth: function() {
             return Number(this.element.width);
