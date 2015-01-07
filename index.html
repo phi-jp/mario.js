@@ -8,22 +8,70 @@
     </body>
 </html>
 
+<!--
 <script src="mario.js"></script>
+-->
+
+<script src="src/mario.js"></script>
+<script src="src/player.js"></script>
+<script src="src/block.js"></script>
 <script>
 window.onload = function() {
 
-    Mario({
-        x: window.innerWidth-100,
-        scale: 4,
+    Mario.Player({
+        x: window.innerWidth-180,
+        y: window.innerHeight-150,
+        scale: 0.8,
         direction: "left",
+        floorHeight: 30
     });
 
-    Mario.Block({
-        x: window.innerWidth-100,
-        y: window.innerHeight-150,
-        width: 52,
-        height: 52,
-        src: "http://lh6.googleusercontent.com/jlfzYR2OlLk8cU-kFJwjmHv55vN_kfbGm2AxSgFuy2s9Z-47uce-Uw4HejZmpeplB4UpJOEb2g=s128-h128-e365",
+    // Mario.Block({
+    //     x: window.innerWidth-150,
+    //     y: window.innerHeight-220,
+    //     width: 48,
+    //     height: 48,
+    //     src: Mario.assets.rss,
+    //     link: ""
+    // });
+
+    var blockX = window.innerWidth-100;
+    var blockY = window.innerHeight-220;
+    var step = 56;
+
+    Mario.RssBlock({
+        x: blockX,
+        y: blockY,
+        width: 48,
+        height: 48,
+    });
+
+    Mario.HatenaBlock({
+        x: blockX-step*2,
+        y: blockY,
+        width: 48,
+        height: 48,
+        src: Mario.assets.hatebu,
+    });
+
+    Mario.TwitterBlock({
+        x: blockX-step*3,
+        y: blockY,
+        width: 48,
+        height: 48,
+        src: Mario.assets.hatebu,
+        title: "tmlife",
+        link: "http://tmlife.io",
+    });
+
+    Mario.PocketBlock({
+        x: blockX-step*1,
+        y: blockY,
+        width: 48,
+        height: 48,
+        src: Mario.assets.pocket,
+        title: "tmlife",
+        link: "http://tmlife.io",
     });
 };
 </script>
