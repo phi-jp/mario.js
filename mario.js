@@ -238,6 +238,16 @@
                 this.setDirection("right");
             }
 
+            // warp
+            if (this.getRight() < 0) {
+                this.setX(window.innerWidth);
+                vx = 0;
+            }
+            else if (x > window.innerWidth) {
+                this.setX(0);
+                vx = 0;
+            }
+
             // ジャンプ判定
             if (this.enableJump) {
                 if (isKey(KEY_UP)) {
@@ -392,8 +402,11 @@
         init: function(param) {
         	param.src = Mario.assets.twitter;
 
+            var euc = encodeURIComponent;
         	var url = "https://twitter.com/intent/tweet?text={title}&url={url}";
-        	param.link = url.replace("{title}", param.title).replace("{url}", param.link);
+            param.title = param.title || document.title;
+            param.link = param.link || location.href;
+        	param.link = url.replace("{title}", euc(param.title)).replace("{url}", euc(param.link));
         	param.border = "2px solid hsla(200, 50%, 50%, 1)";
 
             np.Mario._Block.call(this, param);

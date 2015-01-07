@@ -143,6 +143,16 @@
                 this.setDirection("right");
             }
 
+            // warp
+            if (this.getRight() < 0) {
+                this.setX(window.innerWidth);
+                vx = 0;
+            }
+            else if (x > window.innerWidth) {
+                this.setX(0);
+                vx = 0;
+            }
+
             // ジャンプ判定
             if (this.enableJump) {
                 if (isKey(KEY_UP)) {

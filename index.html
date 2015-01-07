@@ -46,6 +46,14 @@ window.onload = function() {
         height: 48,
     });
 
+    Mario.PocketBlock({
+        x: blockX-step*1,
+        y: blockY,
+        width: 48,
+        height: 48,
+        src: Mario.assets.pocket,
+    });
+
     Mario.HatenaBlock({
         x: blockX-step*2,
         y: blockY,
@@ -60,19 +68,10 @@ window.onload = function() {
         width: 48,
         height: 48,
         src: Mario.assets.hatebu,
-        title: "tmlife",
-        link: "http://tmlife.io",
+        // title: "tmlife",
+        // link: "http://tmlife.io",
     });
 
-    Mario.PocketBlock({
-        x: blockX-step*1,
-        y: blockY,
-        width: 48,
-        height: 48,
-        src: Mario.assets.pocket,
-        title: "tmlife",
-        link: "http://tmlife.io",
-    });
 };
 </script>
 
