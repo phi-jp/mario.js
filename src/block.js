@@ -130,3 +130,32 @@
     };
 
 })(this);
+
+(function(np) {
+
+    var FeedlyBlock = np.Mario.createClass({
+        superClass: np.Mario._Block,
+
+        init: function(param) {
+            param.src = Mario.assets.feedly;
+            var euc = encodeURIComponent;
+            var url = "http://feedly.com/i/subscription/feed/{url}";
+            var link = param.link || location.href;
+            param.link = url.replace("{url}", euc(link));
+            param.border = "2px solid hsl(100, 60%, 50%)";
+
+            np.Mario._Block.call(this, param);
+
+            this.element.style.background = "hsl(100, 50%, 50%)";
+        },
+    });
+
+    np.Mario.FeedlyBlock = function(param) {
+        return new FeedlyBlock(param);
+    };
+
+})(this);
+
+
+
+
